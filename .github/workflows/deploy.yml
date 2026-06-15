@@ -10,16 +10,15 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
+          python-version: '3.9'
 
       - name: Install dependencies
-        run: |
-          pip install pandas matplotlib seaborn azure-storage-blob
+        run: pip install pandas matplotlib seaborn azure-storage-blob
 
       - name: Run data analysis script
         run: python data_analysis.py
@@ -27,5 +26,14 @@ jobs:
       - name: Build Docker image
         run: docker build -t nutritional-insights:latest .
 
+      - name: Save Docker image as artifact
+        run: docker save nutritional-insights:latest -o nutritional-insights.tar
+
+      - name: Upload Docker image artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: nutritional-insights-image
+          path: nutritional-insights.tar
+
       - name: Simulate deployment
-        run: echo "Simulated deployment complete — container image built successfully."
+        run: echo "Deployment complete - Docker image saved and uploaded as artifact!"
