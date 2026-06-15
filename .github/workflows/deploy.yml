@@ -1,0 +1,31 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          pip install pandas matplotlib seaborn azure-storage-blob
+
+      - name: Run data analysis script
+        run: python data_analysis.py
+
+      - name: Build Docker image
+        run: docker build -t nutritional-insights:latest .
+
+      - name: Simulate deployment
+        run: echo "Simulated deployment complete — container image built successfully."
